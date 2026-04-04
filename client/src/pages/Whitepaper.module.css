@@ -1,0 +1,170 @@
+.whitepaper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  text-align: center;
+  padding-bottom: 8px;
+}
+
+.header h1 {
+  font-size: 36px;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.header p {
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 24px;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: sticky;
+  top: 88px;
+  align-self: start;
+}
+
+.sidebarItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.sidebarItem:hover {
+  background: var(--gold-muted);
+  color: var(--gold-light);
+}
+
+.sidebarActive {
+  background: var(--gold-muted);
+  color: var(--gold);
+  border-left: 3px solid var(--gold);
+}
+
+.sidebarIcon {
+  font-size: 16px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.section {
+  display: none;
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  padding: 32px;
+}
+
+.sectionVisible {
+  display: block;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.sectionIcon {
+  font-size: 28px;
+}
+
+.sectionHeader h2 {
+  font-size: 26px;
+  color: var(--gold);
+}
+
+.sectionContent p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-bottom: 12px;
+}
+
+.sectionContent p:last-child {
+  margin-bottom: 0;
+}
+
+.subsections {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-light);
+}
+
+.subsection {
+  padding-left: 16px;
+  border-left: 2px solid var(--gold-muted);
+}
+
+.subsectionTitle {
+  font-family: 'Crimson Pro', serif;
+  font-size: 18px;
+  color: var(--gold-light);
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.subsectionContent p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-bottom: 8px;
+}
+
+.subsectionContent p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 4px;
+    padding-bottom: 8px;
+  }
+
+  .sidebarItem {
+    white-space: nowrap;
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+
+  .sidebarActive {
+    border-left: none;
+    border-bottom: 2px solid var(--gold);
+  }
+}

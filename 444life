@@ -1,0 +1,3 @@
+git clone --branch v44.0.0 --depth 1 https://github.com/galacticcouncil/hydration-node.git
+cd hydration-node
+make srbuild

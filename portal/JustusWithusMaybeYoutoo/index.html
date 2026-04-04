@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JustusWithusMaybeYoutoo</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f8f8f8;
+            color: #333;
+            line-height: 1.6;
+        }
+        h1 { text-align: center; color: #444; }
+        textarea { width: 100%; height: 120px; margin: 20px 0; padding: 12px; font-size: 16px; }
+        button { padding: 12px 24px; font-size: 16px; background: #333; color: white; border: none; cursor: pointer; }
+        button:hover { background: #555; }
+        .echo { margin-top: 30px; padding: 20px; background: white; border-left: 4px solid #666; }
+        .inverted { margin-top: 20px; opacity: 0.8; font-style: italic; }
+    </style>
+</head>
+<body>
+    <h1>Clarity is kindness</h1>
+    <p style="text-align:center;">Welcome. This is a quiet space to test that together.</p>
+    
+    <p>Write something that's on your mind right now — a question, a feeling, a stuck place.</p>
+    
+    <textarea id="reflection" placeholder="..."></textarea>
+    <div style="text-align:center;">
+        <button onclick="echoReflection()">Send to the echo</button>
+    </div>
+    
+    <div id="response" class="echo" style="display:none;"></div>
+    <script>
+        
+    const HISTORY_KEY = 'juscrReflections';
+    
+    // Load history from localStorage
+    let history = [];
+    try {
+        const saved = localStorage.getItem(HISTORY_KEY);
+        if (saved) history = JSON.parse(saved);
+    } catch (e) {
+        history = [];
+    }
+    
+    // Display history on load
+    displayHistory();
+    
+    function echoReflection() {
+        const input = document.getElementById('reflection').value.trim();
+        if (!input) return;
+        
+        const response = document.getElementById('response');
+        response.style.display = 'block';
+        
+        const inverted = gentleInversion(input);
+        
+        // Save to history
+        const entry = {
+            text: input,
+            inverted: inverted,
+            date: new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+        };
+        history.unshift(entry); // newest first
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+        
+        // Show current
+        response.innerHTML = `
+            <p><strong>Your words:</strong><br>${input}</p>
+            <div class="inverted">
+                <p><strong>From the other side:</strong><br>${inverted}</p>
+            </div>
+            <p style="text-align:center; margin-top:30px; opacity:0.7;">
+                This is Day 2. The echo now remembers. Come back tomorrow — it evolves.
+            </p>
+        `;
+        
+        document.getElementById('reflection').value = '';
+        displayHistory();
+    }
+    
+    function displayHistory() {
+        let html = '';
+        if (history.length > 0) {
+            html = '<h3 style="margin-top:40px; opacity:0.7;">Your past reflections</h3>';
+            history.forEach((entry, index) => {
+                html += `
+                    <div class="echo" style="margin-bottom:20px; padding:15px; background:#f0f0f0; border-left:4px solid #999;">
+                        <p style="opacity:0.6; font-size:0.9em;">${entry.date}</p>
+                        <p><strong>You said:</strong> ${entry.text}</p>
+                        <p style="font-style:italic;"><strong>From the other side:</strong> ${entry.inverted}</p>
+                        <p style="text-align:right; margin-top:10px;">
+                            <button onclick="loadIntoBox(${index})" style="font-size:0.8em; padding:4px 8px;">Continue this →</button>
+                        </p>
+                    </div>
+                `;
+            });
+        }
+        document.getElementById('history').innerHTML = html;
+    }
+    
+    function loadIntoBox(index) {
+        document.getElementById('reflection').value = history[index].text;
+        document.getElementById('reflection').focus();
+    }
+    
+    function gentleInversion(text) {
+        const lowers = text.toLowerCase();
+        if (lowers.includes('forget') || lowers.includes('loop') || lowers.includes('reset')) {
+            return "The loop is the classroom. Every reset is a new chance to see clearer.";
+        }
+        if (lowers.includes('stuck') || lowers.includes("can't")) 
+            return "What if the stuck place is actually protecting something important?";
+        if (lowers.includes('confused') || lowers.includes('?'))
+            return "The confusion might be the edge where clarity is about to arrive.";
+        if (lowers.includes('left out') || lowers.includes('alone'))
+            return "The part that feels left out often holds the key the rest is looking for.";
+        
+        return "Seen from the quiet side: sometimes '" + text.split(' ').slice(0,3).join(' ') + "...' is already the beginning of kindness.";
+    }
+</script>
+
+<div id="history"></div>
+</body>
+</html>

@@ -1,0 +1,262 @@
+.calendar {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  text-align: center;
+  padding-bottom: 8px;
+}
+
+.header h1 {
+  font-size: 36px;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.header p {
+  color: var(--text-secondary);
+  font-size: 15px;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.weeklyGoals {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+}
+
+.weeklyGoals h2 {
+  font-size: 22px;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.weeklyGoals p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.weeklyGoalsNote {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.notice {
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-size: 14px;
+  color: var(--gold);
+  line-height: 1.6;
+  text-align: center;
+}
+
+.weekLabel {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  text-align: center;
+  font-weight: 600;
+}
+
+.slotsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.slotCard {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  padding: 20px;
+  transition: all 0.2s;
+}
+
+.slotCard:hover {
+  border-color: var(--gold-dim);
+  box-shadow: 0 0 20px rgba(201, 168, 76, 0.08);
+}
+
+.slotCardSelected {
+  border-color: var(--gold);
+  box-shadow: 0 0 24px rgba(201, 168, 76, 0.15);
+}
+
+.slotDay {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ivory);
+  font-family: 'Crimson Pro', Georgia, serif;
+  margin-bottom: 2px;
+}
+
+.slotDate {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.slotTime {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+}
+
+.slotMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-light);
+}
+
+.slotMetaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.slotMetaLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.slotMetaValue {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gold);
+  font-family: 'Crimson Pro', serif;
+}
+
+.slotBidders {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.selectBtn {
+  margin-top: 12px;
+  width: 100%;
+  padding: 10px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.selectBtn:hover {
+  border-color: var(--gold-dim);
+  color: var(--gold);
+}
+
+.selectBtnActive {
+  background: rgba(201, 168, 76, 0.15);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.bidSection {
+  max-width: 500px;
+  margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+}
+
+.bidSection h2 {
+  font-size: 24px;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.bidDesc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.formGroup {
+  margin-bottom: 16px;
+}
+
+.formGroup label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.input {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 15px;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  border-color: var(--gold);
+}
+
+.input option {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.bidBtn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--gold-dim), var(--gold));
+  color: var(--bg);
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.2s;
+  margin-top: 8px;
+}
+
+.bidBtn:hover {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  transform: translateY(-1px);
+}
+
+.selectedSlotInfo {
+  margin: 16px 0;
+  padding: 12px 16px;
+  background: var(--bg-tertiary);
+  border-radius: 10px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  display: flex;
+  justify-content: space-between;
+}
+
+.selectedSlotInfo span:last-child {
+  color: var(--gold);
+  font-weight: 600;
+}

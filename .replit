@@ -1,0 +1,61 @@
+modules = ["web", "nodejs-20", "postgresql-16", "python-3.11"]
+[agent]
+expertMode = true
+integrations = ["javascript_gemini_ai_integrations:2.0.0", "github:1.0.0"]
+
+[nix]
+channel = "stable-25_05"
+packages = ["unzip", "zip"]
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start application"
+
+[[workflows.workflow]]
+name = "Start application"
+author = "agent"
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
+waitForPort = 5000
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[[ports]]
+localPort = 9999
+externalPort = 3003
+
+[[ports]]
+localPort = 23636
+externalPort = 3002
+
+[[ports]]
+localPort = 23637
+externalPort = 3001
+
+[[ports]]
+localPort = 24678
+externalPort = 3000
+
+[deployment]
+deploymentTarget = "autoscale"
+publicDir = "client/dist"
+build = ["npm", "run", "build"]
+run = ["npm", "start"]
+
+[objectStorage]
+defaultBucketID = "replit-objstore-68c07509-efaf-46fe-9e91-64a8d14382b3"

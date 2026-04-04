@@ -1,0 +1,60 @@
+// lib.rs — inside your program module
+use anchor_lang::prelude::*;
+
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, PartialEq)]
+pub enum ShieldMode { Ghost, Accountability }
+
+#[account]
+pub struct ShieldConfig {
+    pub authority: Pubkey,
+    pub mode: ShieldMode,
+    pub bump: u8,
+}
+
+#[derive(Accounts)]
+pub struct SetShieldMode<'info> {
+    #[account(mut)]
+    pub authority: Signer<'info>,
+    #[account(
+        init_if_needed,
+        payer = authority,
+        space = 8 + 32 + 1 + 1,
+        seeds = [b"shield", authority.key().as_ref()],
+        bump
+    )]
+    pub shield: Account<'info, ShieldConfig>,
+    pub system_program: Program<'info, System>,
+}
+
+pub fn set_shield_mode(ctx: Context<SetShieldMode>, mode: ShieldMode) -> Result<()> {
+    let shield = &mut ctx.accounts.shield;
+    shield.authority = *ctx.accounts.authority.key;
+    shield.mode = mode;
+    shield.bump = *ctx.bumps.get("shield").unwrap();
+    Ok(())
+}
+
+// In your placeBid / any protected instruction — add this guard
+pub fn shield_guard(ctx: &Context<YourInstruction>, caller: Pubkey) -> Result<()> {
+    let shield = &ctx.accounts.shield; // load PDA
+    if shield.mode == ShieldMode::Ghost {
+        // silent ghost
+        require!(your_whitelist.contains(&caller), ErrorCode::Ghosted);
+        return Ok(()); // no event, pure silence
+    } else {
+        // Accountability Bitch Mode
+        if !your_whitelist.contains(&caller) {
+            // slash their stake if they have any
+            // emit to Ouroboros (our existing event)
+            emit!(OuroborosEvent {
+                event_type: "demonic_sync_attempt".to_string(),
+                attacker: caller,
+                timestamp: Clock::get()?.unix_timestamp,
+                slashed: true,
+            });
+            // Zapier will catch via webhook and log forever
+            return err!(ErrorCode::AccountabilityServed);
+        }
+    }
+    Ok(())
+}

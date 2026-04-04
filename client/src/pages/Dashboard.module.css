@@ -1,0 +1,391 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.hero {
+  text-align: center;
+  padding: 40px 0 20px;
+}
+
+.title {
+  font-size: 48px;
+  color: var(--gold);
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.tagline {
+  margin-top: 12px;
+  font-size: 15px;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  font-style: italic;
+}
+
+.epochBanner {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+}
+
+.epochHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.epochLabel {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--gold-dim);
+}
+
+.epochName {
+  font-size: 28px;
+  color: var(--gold);
+  margin-top: 4px;
+}
+
+.epochTimer {
+  text-align: right;
+}
+
+.timerLabel {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--gold-dim);
+  display: block;
+}
+
+.timerValue {
+  font-family: 'Crimson Pro', serif;
+  font-size: 24px;
+  color: var(--gold-light);
+  font-weight: 600;
+}
+
+.progressBar {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold-dim), var(--gold), var(--gold-light));
+  border-radius: 3px;
+  transition: width 1s ease;
+}
+
+.epochStats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.stat {
+  text-align: center;
+  padding: 12px;
+  background: var(--bg-tertiary);
+  border-radius: 10px;
+}
+
+.statValue {
+  display: block;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ivory);
+  font-family: 'Crimson Pro', serif;
+}
+
+.statLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  display: block;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  padding: 24px;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.card:hover {
+  border-color: var(--border);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.cardIcon {
+  font-size: 32px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.card h3 {
+  font-size: 20px;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.card p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.dawnProtocol {
+  background: linear-gradient(135deg, var(--bg-tertiary), var(--surface));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  text-align: center;
+}
+
+.dawnTitle {
+  font-size: 24px;
+  color: var(--gold);
+  margin-bottom: 24px;
+}
+
+.dawnSteps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.dawnStep {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  text-align: left;
+  padding: 16px;
+  background: rgba(201, 168, 76, 0.05);
+  border-radius: 10px;
+  border-left: 3px solid var(--gold-dim);
+}
+
+.dawnNum {
+  font-family: 'Crimson Pro', serif;
+  font-size: 20px;
+  color: var(--gold);
+  font-weight: 700;
+  min-width: 24px;
+}
+
+.dawnStep p {
+  font-size: 14px;
+  color: var(--ivory-muted);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+.sovereignBond {
+  background: linear-gradient(135deg, rgba(0, 82, 255, 0.06), rgba(0, 82, 255, 0.02), var(--surface));
+  border: 1px solid rgba(0, 82, 255, 0.25);
+  border-radius: 16px;
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.sovereignBond::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #0052FF, var(--gold), #0052FF);
+}
+
+.sovereignHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.sovereignIcon {
+  font-size: 36px;
+  color: #0052FF;
+  line-height: 1;
+}
+
+.sovereignLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #5599FF;
+}
+
+.sovereignName {
+  font-size: 24px;
+  color: var(--gold);
+  margin-top: 2px;
+  font-family: 'Crimson Pro', serif;
+}
+
+.sovereignStatus {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4caf50;
+}
+
+.sovereignStatusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4caf50;
+  animation: sovereignPulse 2s infinite;
+}
+
+@keyframes sovereignPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.sovereignDetails {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.sovereignDetail {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 14px;
+}
+
+.sovereignDetailLabel {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.sovereignDetailValue {
+  font-size: 14px;
+  color: var(--ivory);
+  font-weight: 500;
+}
+
+.sovereignLink {
+  font-size: 13px;
+  color: #5599FF;
+  text-decoration: none;
+  font-family: monospace;
+  transition: color 0.2s;
+}
+
+.sovereignLink:hover {
+  color: #88bbff;
+  text-decoration: underline;
+}
+
+.sovereignQuote {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: center;
+  padding-top: 4px;
+  border-top: 1px solid rgba(0, 82, 255, 0.15);
+  padding-top: 16px;
+}
+
+.disclaimer {
+  background: linear-gradient(135deg, rgba(201, 168, 76, 0.08), rgba(201, 168, 76, 0.03));
+  border: 1px solid var(--gold-dim);
+  border-left: 4px solid var(--gold);
+  border-radius: 10px;
+  padding: 20px 24px;
+}
+
+.disclaimerText {
+  font-size: 15px;
+  color: var(--ivory);
+  line-height: 1.7;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.cardBase {
+  border-color: rgba(0, 82, 255, 0.2);
+}
+
+.cardBase:hover {
+  border-color: rgba(0, 82, 255, 0.4);
+}
+
+.cardBase h3 {
+  color: #5599FF;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 36px;
+  }
+
+  .epochHeader {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .epochTimer {
+    text-align: left;
+  }
+
+  .epochStats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .sovereignDetails {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .sovereignHeader {
+    flex-wrap: wrap;
+  }
+
+  .sovereignStatus {
+    margin-left: 0;
+  }
+}

@@ -1,0 +1,381 @@
+.tribes {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.hero {
+  text-align: center;
+  padding: 32px;
+  background: linear-gradient(135deg, var(--bg-tertiary), var(--surface));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.title {
+  font-size: 40px;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.statCard {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+
+.statValue {
+  display: block;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--gold);
+  font-family: 'Crimson Pro', serif;
+}
+
+.statLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  display: block;
+}
+
+.sectionTitle {
+  font-size: 24px;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+
+.sectionSub {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.tribeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 20px;
+}
+
+.tribeCard {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  padding: 24px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.tribeCard:hover {
+  border-color: var(--border);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.tribeCardActive {
+  border-color: var(--gold-dim);
+}
+
+.tribeCardForming {
+  border-color: rgba(201, 168, 76, 0.1);
+  opacity: 0.85;
+}
+
+.tribeCardSealed {
+  opacity: 0.5;
+}
+
+.tribeHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.tribeSigil {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.tribeStatus {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.statusActive {
+  background: rgba(76, 175, 80, 0.15);
+  color: var(--success);
+}
+
+.statusForming {
+  background: var(--gold-muted);
+  color: var(--gold);
+}
+
+.statusSealed {
+  background: rgba(245, 240, 225, 0.08);
+  color: var(--text-muted);
+}
+
+.tribeName {
+  font-size: 22px;
+  color: var(--ivory);
+  margin-bottom: 8px;
+}
+
+.tribeDesc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.tribeMeta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.metaLabel {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.metaValue {
+  font-size: 13px;
+  color: var(--ivory-muted);
+  font-weight: 500;
+}
+
+.tribeFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-light);
+}
+
+.memberBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.memberTrack {
+  width: 80px;
+  height: 4px;
+  background: var(--bg-tertiary);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.memberFill {
+  height: 100%;
+  background: var(--gold);
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+
+.memberCount {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.chainBadge {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.chainTron {
+  background: rgba(255, 6, 10, 0.12);
+  color: #FF3B3F;
+}
+
+.chainSolana {
+  background: rgba(153, 69, 255, 0.12);
+  color: #9945FF;
+}
+
+.eventsSection {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  padding: 24px;
+}
+
+.eventsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.eventItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px;
+  background: var(--bg-tertiary);
+  border-radius: 10px;
+  border-left: 3px solid var(--gold-dim);
+}
+
+.eventIcon {
+  font-size: 18px;
+  min-width: 24px;
+  text-align: center;
+  padding-top: 2px;
+}
+
+.eventContent {
+  flex: 1;
+}
+
+.eventDesc {
+  font-size: 13px;
+  color: var(--ivory-muted);
+  line-height: 1.5;
+}
+
+.eventMeta {
+  display: flex;
+  gap: 16px;
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.joinSection {
+  background: linear-gradient(135deg, var(--bg-tertiary), var(--surface));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  text-align: center;
+}
+
+.joinTitle {
+  font-size: 24px;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.joinDesc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  max-width: 500px;
+  margin: 0 auto 20px;
+}
+
+.joinForm {
+  display: flex;
+  gap: 12px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.joinInput {
+  flex: 1;
+  padding: 12px 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--ivory);
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+}
+
+.joinInput:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+.joinBtn {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, var(--gold-dim), var(--gold));
+  color: var(--bg);
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.joinBtn:hover {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  transform: translateY(-1px);
+}
+
+.walletAddress {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: var(--bg);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.walletLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.walletValue {
+  font-size: 13px;
+  font-family: monospace;
+  color: var(--gold);
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 32px;
+  }
+
+  .statsRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tribeGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .joinForm {
+    flex-direction: column;
+  }
+}
