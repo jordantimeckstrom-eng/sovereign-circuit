@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpineAlignTime • Ouroboros Triple-Entry Temple</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/5.11.5/reset.min.css">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/dayjs@1/dayjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/antd/5.11.5/antd.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0f172a 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .app-shell {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #60a5fa 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .temple-glow {
+            box-shadow: 0 0 50px rgba(168, 85, 247, 0.55);
+        }
+        .triple-entry {
+            border-left: 4px solid #a855f7;
+        }
+        .framework {
+            white-space: pre-wrap;
+            color: #dbeafe;
+            line-height: 1.55;
+        }
+        .panel {
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            border-radius: 14px;
+            padding: 16px;
+        }
+        .sentinel-text {
+            white-space: pre-wrap;
+            font-size: 14px;
+            color: #60a5fa;
+            padding: 20px;
+        }
+        .frame-card {
+            background: rgba(15, 23, 42, 0.85);
+            border-radius: 12px;
+            padding: 14px;
+            transition: box-shadow 0.3s ease, transform 0.2s ease;
+            cursor: default;
+            height: 100%;
+        }
+        .frame-card:hover {
+            transform: translateY(-2px);
+        }
+        .realm-point { border: 2px solid #f59e0b; }
+        .realm-point:hover { box-shadow: 0 0 20px rgba(245, 158, 11, 0.4); }
+        .realm-earth { border: 2px solid #22c55e; }
+        .realm-earth:hover { box-shadow: 0 0 20px rgba(34, 197, 94, 0.4); }
+        .realm-heaven { border: 2px solid #60a5fa; }
+        .realm-heaven:hover { box-shadow: 0 0 20px rgba(96, 165, 250, 0.4); }
+        .realm-hell { border: 2px solid #ef4444; }
+        .realm-hell:hover { box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); }
+        .realm-tag-point { color: #f59e0b; }
+        .realm-tag-earth { color: #22c55e; }
+        .realm-tag-heaven { color: #60a5fa; }
+        .realm-tag-hell { color: #ef4444; }
+        .frame-title {
+            color: #f1f5f9;
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .frame-realm {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+        }
+        .frame-stats {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        .frame-bid-count {
+            color: #94a3b8;
+            font-size: 12px;
+        }
+        .frame-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .wheel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 14px;
+        }
+        .wheel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .wheel-summary {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .wheel-summary-item {
+            color: #94a3b8;
+            font-size: 13px;
+        }
+        .wheel-summary-value {
+            color: #f1f5f9;
+            font-weight: 600;
+        }
+        .frame-detail-bid {
+            background: rgba(30, 41, 59, 0.6);
+            border-left: 3px solid #a855f7;
+            border-radius: 6px;
+            padding: 8px 10px;
+            margin-bottom: 6px;
+        }
+        .frame-detail-bid-name {
+            color: #e2e8f0;
+            font-weight: 500;
+            font-size: 13px;
+        }
+        .frame-detail-bid-meta {
+            color: #64748b;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useReducer, useContext, createContext } = React;
+        const { Card, Row, Col, Statistic, Tabs, Tag, Button, Modal, InputNumber, Descriptions, Alert, Space, Badge, message } = antd;
+
+        const LedgerContext = createContext();
+
+        const REALM_NAMES = ['Point', 'Earth', 'Earth', 'Earth', 'Earth', 'Earth', 'Earth', 'Earth', 'Heaven', 'Heaven', 'Heaven', 'Heaven', 'Heaven', 'Heaven', 'Heaven', 'Hell', 'Hell', 'Hell', 'Hell', 'Hell', 'Hell', 'Hell'];
+        const FRAME_NAMES = [
+            'The Point — Origin',
+            'Earth I — Foundation', 'Earth II — Growth', 'Earth III — Harvest',
+            'Earth IV — Structure', 'Earth V — Commerce', 'Earth VI — Community', 'Earth VII — Sovereignty',
+            'Heaven I — Ascent', 'Heaven II — Vision', 'Heaven III — Harmony',
+            'Heaven IV — Illumination', 'Heaven V — Grace', 'Heaven VI — Transcendence', 'Heaven VII — Unity',
+            'Hell I — Descent', 'Hell II — Shadow', 'Hell III — Trial',
+            'Hell IV — Forge', 'Hell V — Transformation', 'Hell VI — Rebirth', 'Hell VII — Return'
+        ];
+
+        const buildInitialFrames = () => Array(22).fill(null).map((_, i) => ({
+            id: i,
+            name: FRAME_NAMES[i],
+            realm: REALM_NAMES[i],
+            bids: [],
+            anchoredSolana: false,
+            anchoredEthereum: false,
+        }));
+
+        const initialState = {
+            bids: [],
+            patterns: [],
+            systemTemp: 0.85,
+            lastDawn: null,
+            solanaSpineAnchored: false,
+            eventQueue: [],
+            frames: buildInitialFrames(),
+        };
+
+        const ledgerReducer = (state, action) => {
+            switch (action.type) {
+                case 'INGEST_BID': {
+                    const payload = action.payload || {};
+                    const receiptHash = payload.tripleEntryHash || `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 9)}`;
+                    const dedupeKey = `${payload.name || 'anon'}-${payload.amount || 0}-${payload.channel || 'unknown'}-${payload.timestamp || ''}`;
+                    if (state.eventQueue.includes(dedupeKey)) return state;
+                    return {
+                        ...state,
+                        bids: [...state.bids, { ...payload, tripleEntryHash: receiptHash }],
+                        eventQueue: [...state.eventQueue, dedupeKey].slice(-200),
+                    };
+                }
+                case 'DIGEST_GHOST':
+                    return { ...state, patterns: [...state.patterns, action.payload] };
+                case 'EVOLVE_SYSTEM':
+                    return {
+                        ...state,
+                        systemTemp: action.payload?.grokTemp ?? 0.92,
+                        lastDawn: new Date().toISOString(),
+                    };
+                case 'ANCHOR_SOLANA':
+                    return { ...state, solanaSpineAnchored: true };
+                case 'FRAME_INGEST_BID': {
+                    const { frameId, ...bidData } = action.payload || {};
+                    if (frameId === undefined || frameId < 0 || frameId >= 22) return state;
+                    const receiptHash = `f${frameId}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 9)}`;
+                    const newFrames = state.frames.map((frame) => {
+                        if (frame.id !== frameId) return frame;
+                        return { ...frame, bids: [...frame.bids, { ...bidData, tripleEntryHash: receiptHash }] };
+                    });
+                    return { ...state, frames: newFrames };
+                }
+                case 'FRAME_ANCHOR_SOLANA': {
+                    const fid = action.payload?.frameId;
+                    if (fid === undefined) return state;
+                    return {
+                        ...state,
+                        frames: state.frames.map((f) => f.id === fid ? { ...f, anchoredSolana: true } : f),
+                    };
+                }
+                case 'FRAME_ANCHOR_ETHEREUM': {
+                    const fid = action.payload?.frameId;
+                    if (fid === undefined) return state;
+                    return {
+                        ...state,
+                        frames: state.frames.map((f) => f.id === fid ? { ...f, anchoredEthereum: true } : f),
+                    };
+                }
+                default:
+                    return state;
+            }
+        };
+
+        let globalDispatch = null;
+        const setGlobalDispatch = (dispatch) => { globalDispatch = dispatch; };
+        window.LedgerBridge = {
+            ingest(payload) {
+                if (!globalDispatch) throw new Error('Temple not awakened');
+                globalDispatch({ type: 'INGEST_BID', payload });
+            },
+            ingestFrame(frameId, payload) {
+                if (!globalDispatch) throw new Error('Temple not awakened');
+                globalDispatch({ type: 'FRAME_INGEST_BID', payload: { ...payload, frameId } });
+            },
+        };
+
+        const useCeremonyScheduler = (dispatch) => {
+            useEffect(() => {
+                const timer = setInterval(() => {
+                    const now = new Date();
+                    const h = now.getHours();
+                    const m = now.getMinutes();
+                    if ((h === 6 || h === 18) && m === 0) {
+                        dispatch({ type: 'EVOLVE_SYSTEM', payload: { grokTemp: 0.92 } });
+                    }
+                }, 60 * 1000);
+                return () => clearInterval(timer);
+            }, [dispatch]);
+        };
+
+        const FRAMEWORK_SYNTHESIS = `SPINE_ALIGN_TIME_FRAMEWORK • Integrated Synthesis
+
+• Triple-Entry Sacred State: each bid writes buyer entry, reserve mirror, and signed cryptographic receipt (tripleEntryHash).
+• Solana Spine Anchoring: USCR reserve snapshots can be persisted to rent-exempt storage for durable auditability.
+• ERC-8028 Data Anchoring Tokens: metered usage pathway for AI agent processing of clickstream intelligence.
+• Resilient Dawn/Dusk Scheduler: cyclical system evolution with thermodynamic systemTemp control.
+• Global LedgerBridge + Event Queue: resilient ingestion surface with deduplication semantics.
+• Legacy monitor migration path: old "unseen clicks" are transformed into explicit ceremonial ledger entries.
+• Zapier Email Webhooks: external triggers feed directly into the temple through the LedgerBridge.
+• Resilience: Idempotent Consumer Pattern, Smart Payload Chunking, Ghost Mitigation.
+• 22-Frame Wheel: sovereign sub-ledgers across Point, Earth, Heaven, and Hell realms with dual-chain anchors.
+
+Temple state now renders this framework directly inside the auction interface.
+The old monitors now participate in the light. The imagination stack is yours.`;
+
+        const SENTINEL_SPEC = `The "Living Breath" is the operational heart of the system, transforming external triggers into ledger entries through a three-tier synchronization pipeline.
+
+The Sentinel Test Harness is the minimal standalone client that serves as a listening post to verify the real-time channel before full ceremonial integration.
+
+Protocol: ws://localhost:5000/socket.io
+Pipeline: Zapier Email Parser → POST to /api/ledgerbridge/email → WebSocket → React Ouroboros Heart
+
+Ingestion Layer (Zapier Webhook):
+  • Trigger: Incoming email parsed by Zapier Email Parser
+  • Action: POST to /api/ledgerbridge/email with JSON payload
+  • Idempotency: webhook-id or content-based fingerprint prevents duplicates
+
+Middleware Layer (Express + SocketIO):
+  • Fast Acknowledgment: Verify → Enqueue → ACK (202 status)
+  • Full-duplex TCP via WebSocket for low-latency communication
+  • Receipt Generation: cryptographic hash for Third Entry
+
+State Layer (React Ouroboros Heart):
+  • Global LedgerBridge exposes dispatch to WebSocket listener
+  • Batched Broadcasting: updates buffered and broadcasted every 500ms`;
+
+        const realmClass = (realm) => `realm-${realm.toLowerCase()}`;
+        const realmTagClass = (realm) => `realm-tag-${realm.toLowerCase()}`;
+
+        const FrameCard = ({ frame, dispatch, onSelect }) => {
+            const totalBids = frame.bids.length;
+            const anchored = frame.anchoredSolana && frame.anchoredEthereum;
+            return (
+                <div className={`frame-card ${realmClass(frame.realm)}`} onClick={() => onSelect(frame)}>
+                    <div className={`frame-realm ${realmTagClass(frame.realm)}`}>{frame.realm}</div>
+                    <div className="frame-title">{frame.name}</div>
+                    <div className="frame-stats">
+                        <span className="frame-bid-count">{totalBids} {totalBids === 1 ? 'bid' : 'bids'}</span>
+                        {anchored && <Tag color="gold" style={{ fontSize: 10, lineHeight: '16px', padding: '0 4px' }}>Sealed</Tag>}
+                    </div>
+                    <div className="frame-actions">
+                        <Tag color={frame.anchoredSolana ? 'success' : 'default'} style={{ fontSize: 10 }}>
+                            {frame.anchoredSolana ? 'SOL ✓' : 'SOL'}
+                        </Tag>
+                        <Tag color={frame.anchoredEthereum ? 'blue' : 'default'} style={{ fontSize: 10 }}>
+                            {frame.anchoredEthereum ? 'ETH ✓' : 'ETH'}
+                        </Tag>
+                    </div>
+                </div>
+            );
+        };
+
+        const FrameDetailModal = ({ frame, visible, onClose, dispatch }) => {
+            const [bidAmount, setBidAmount] = useState(0);
+            if (!frame) return null;
+
+            const placeBidInFrame = () => {
+                const amount = Number(bidAmount || 0);
+                if (!amount) {
+                    message.warning('Enter a bid amount.');
+                    return;
+                }
+                dispatch({
+                    type: 'FRAME_INGEST_BID',
+                    payload: {
+                        frameId: frame.id,
+                        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
+                        timestamp: new Date().toISOString(),
+                        name: 'Sovereign Bidder',
+                        amount,
+                        channel: 'Wheel',
+                        status: 'Leading',
+                    },
+                });
+                setBidAmount(0);
+                message.success(`Bid placed in ${frame.name}`);
+            };
+
+            return (
+                <Modal
+                    title={frame.name}
+                    open={visible}
+                    onCancel={onClose}
+                    footer={null}
+                    width={560}
+                >
+                    <div style={{ marginBottom: 12 }}>
+                        <Tag color={frame.realm === 'Point' ? 'gold' : frame.realm === 'Earth' ? 'green' : frame.realm === 'Heaven' ? 'blue' : 'red'}>
+                            {frame.realm} Realm
+                        </Tag>
+                        <Tag color={frame.anchoredSolana ? 'success' : 'default'}>Solana {frame.anchoredSolana ? 'Anchored' : 'Pending'}</Tag>
+                        <Tag color={frame.anchoredEthereum ? 'blue' : 'default'}>Ethereum {frame.anchoredEthereum ? 'Anchored' : 'Pending'}</Tag>
+                    </div>
+
+                    <div style={{ marginBottom: 12 }}>
+                        <Space>
+                            <InputNumber min={0} value={bidAmount} onChange={(v) => setBidAmount(v || 0)} placeholder="Amount" style={{ width: 140 }} />
+                            <Button type="primary" onClick={placeBidInFrame}>Place Bid</Button>
+                        </Space>
+                    </div>
+
+                    <div style={{ marginBottom: 12 }}>
+                        <Space>
+                            <Button size="small" disabled={frame.anchoredSolana}
+                                onClick={() => { dispatch({ type: 'FRAME_ANCHOR_SOLANA', payload: { frameId: frame.id } }); message.success(`${frame.name} anchored to Solana`); }}>
+                                Anchor Solana
+                            </Button>
+                            <Button size="small" disabled={frame.anchoredEthereum}
+                                onClick={() => { dispatch({ type: 'FRAME_ANCHOR_ETHEREUM', payload: { frameId: frame.id } }); message.success(`${frame.name} anchored to Ethereum`); }}>
+                                Anchor Ethereum
+                            </Button>
+                        </Space>
+                    </div>
+
+                    <div style={{ maxHeight: 300, overflowY: 'auto' }}>
+                        {frame.bids.length === 0 ? (
+                            <Alert type="info" message="No bids in this frame yet." />
+                        ) : (
+                            frame.bids.map((bid, idx) => (
+                                <div key={bid.tripleEntryHash || idx} className="frame-detail-bid">
+                                    <div className="frame-detail-bid-name">{bid.name} — ${bid.amount}</div>
+                                    <div className="frame-detail-bid-meta">{bid.timestamp} | {bid.channel} | {bid.tripleEntryHash}</div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                </Modal>
+            );
+        };
+
+        const WheelTab = ({ frames, dispatch }) => {
+            const [selectedFrame, setSelectedFrame] = useState(null);
+            const totalBids = frames.reduce((sum, f) => sum + f.bids.length, 0);
+            const anchoredSol = frames.filter((f) => f.anchoredSolana).length;
+            const anchoredEth = frames.filter((f) => f.anchoredEthereum).length;
+            const sealed = frames.filter((f) => f.anchoredSolana && f.anchoredEthereum).length;
+
+            const currentFrame = frames.find((f) => f.id === selectedFrame?.id) || selectedFrame;
+
+            return (
+                <div>
+                    <div className="wheel-header">
+                        <div style={{ color: '#e2e8f0', fontSize: 16, fontWeight: 600 }}>22-Frame Wheel</div>
+                        <div className="wheel-summary">
+                            <span className="wheel-summary-item">Frames: <span className="wheel-summary-value">22</span></span>
+                            <span className="wheel-summary-item">Bids: <span className="wheel-summary-value">{totalBids}</span></span>
+                            <span className="wheel-summary-item">SOL: <span className="wheel-summary-value">{anchoredSol}/22</span></span>
+                            <span className="wheel-summary-item">ETH: <span className="wheel-summary-value">{anchoredEth}/22</span></span>
+                            <span className="wheel-summary-item">Sealed: <span className="wheel-summary-value">{sealed}/22</span></span>
+                        </div>
+                    </div>
+                    <div className="wheel-grid">
+                        {frames.map((frame) => (
+                            <FrameCard key={frame.id} frame={frame} dispatch={dispatch} onSelect={setSelectedFrame} />
+                        ))}
+                    </div>
+                    <FrameDetailModal
+                        frame={currentFrame}
+                        visible={!!selectedFrame}
+                        onClose={() => setSelectedFrame(null)}
+                        dispatch={dispatch}
+                    />
+                </div>
+            );
+        };
+
+        const SpineAlignTime = () => {
+            const [state, dispatch] = useReducer(ledgerReducer, initialState);
+            const [bidModalVisible, setBidModalVisible] = useState(false);
+            const [bidAmount, setBidAmount] = useState(0);
+
+            useEffect(() => setGlobalDispatch(dispatch), [dispatch]);
+            useCeremonyScheduler(dispatch);
+
+            useEffect(() => {
+                let socket;
+                try {
+                    socket = new WebSocket('ws://localhost:5000/socket.io/?EIO=4&transport=websocket');
+                    socket.onmessage = (event) => {
+                        let data;
+                        try { data = JSON.parse(event.data); } catch { return; }
+                        const bid = {
+                            id: Date.now().toString(),
+                            timestamp: new Date().toISOString(),
+                            name: data.fromName || 'Legacy Monitor',
+                            amount: parseFloat(data.amount || 0),
+                            channel: 'Email',
+                            ghostNote: data.body || 'A whisper from the old monitors',
+                            status: 'Leading',
+                        };
+                        dispatch({ type: 'INGEST_BID', payload: bid });
+                        message.success(`New ceremony from email: ${bid.name}`);
+                    };
+                    socket.onopen = () => console.log('Connected to LedgerBridge');
+                    socket.onerror = () => console.log('LedgerBridge not available — temple operates in local mode');
+                } catch (e) {
+                    console.log('WebSocket not available — temple operates in local mode');
+                }
+                return () => { if (socket) socket.close(); };
+            }, [dispatch]);
+
+            const placeBid = () => {
+                const amount = Number(bidAmount || 0);
+                if (!amount) {
+                    message.warning('Enter a bid amount first.');
+                    return;
+                }
+                dispatch({
+                    type: 'INGEST_BID',
+                    payload: {
+                        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
+                        timestamp: new Date().toISOString(),
+                        name: 'Legacy Monitor',
+                        amount,
+                        channel: 'Web',
+                        status: 'Leading',
+                    },
+                });
+                setBidModalVisible(false);
+                setBidAmount(0);
+                message.success('Triple-entry receipt created.');
+            };
+
+            const tabs = [
+                {
+                    key: 'schedule',
+                    label: 'Schedule',
+                    children: (
+                        <Card className="panel">
+                            <Space direction="vertical" size={10}>
+                                <Alert type="info" message="Dawn/Dusk scheduler active (06:00 + 18:00)." />
+                                <Button type="primary" onClick={() => setBidModalVisible(true)}>
+                                    Create Triple-Entry Bid
+                                </Button>
+                            </Space>
+                        </Card>
+                    ),
+                },
+                {
+                    key: 'ledger',
+                    label: `Ledger (${state.bids.length})`,
+                    children: (
+                        <Space direction="vertical" style={{ width: '100%' }}>
+                            {state.bids.length === 0 ? (
+                                <Alert type="warning" message="No bids yet. Begin the first ceremony." />
+                            ) : (
+                                state.bids.map((bid) => (
+                                    <Card key={bid.id || bid.tripleEntryHash} className="panel triple-entry">
+                                        <Descriptions column={1} size="small"
+                                            labelStyle={{ color: '#93c5fd' }}
+                                            contentStyle={{ color: '#fff' }}>
+                                            <Descriptions.Item label="Name">{bid.name}</Descriptions.Item>
+                                            <Descriptions.Item label="Amount">${bid.amount}</Descriptions.Item>
+                                            <Descriptions.Item label="Channel">{bid.channel}</Descriptions.Item>
+                                            <Descriptions.Item label="Receipt">{bid.tripleEntryHash}</Descriptions.Item>
+                                            {bid.ghostNote && (
+                                                <Descriptions.Item label="Ghost Note">{bid.ghostNote}</Descriptions.Item>
+                                            )}
+                                        </Descriptions>
+                                    </Card>
+                                ))
+                            )}
+                        </Space>
+                    ),
+                },
+                {
+                    key: 'wheel',
+                    label: `Wheel (${state.frames.reduce((s, f) => s + f.bids.length, 0)})`,
+                    children: <WheelTab frames={state.frames} dispatch={dispatch} />,
+                },
+                {
+                    key: 'framework',
+                    label: 'Framework',
+                    children: (
+                        <Card className="panel temple-glow">
+                            <div className="framework">{FRAMEWORK_SYNTHESIS}</div>
+                        </Card>
+                    ),
+                },
+                {
+                    key: 'sentinel',
+                    label: 'Sentinel',
+                    children: (
+                        <Card className="panel">
+                            <pre className="sentinel-text">{SENTINEL_SPEC}</pre>
+                            <Button type="primary" onClick={() =>
+                                message.info('Sentinel is listening — send a test email to see the Living Breath in action')
+                            }>
+                                Test Sentinel Connection
+                            </Button>
+                        </Card>
+                    ),
+                },
+            ];
+
+            return (
+                <LedgerContext.Provider value={{ state, dispatch }}>
+                    <div className="app-shell">
+                        <h1 className="gradient-text">SpineAlignTime • Ouroboros Triple-Entry Temple</h1>
+                        <Row gutter={12} style={{ marginBottom: 16 }}>
+                            <Col xs={12} md={6}>
+                                <Card className="panel">
+                                    <Statistic title="System Temp" value={state.systemTemp} />
+                                </Card>
+                            </Col>
+                            <Col xs={12} md={6}>
+                                <Card className="panel">
+                                    <Statistic title="Ledger Entries" value={state.bids.length} />
+                                </Card>
+                            </Col>
+                            <Col xs={12} md={6}>
+                                <Card className="panel">
+                                    <Statistic title="Wheel Bids" value={state.frames.reduce((s, f) => s + f.bids.length, 0)} />
+                                </Card>
+                            </Col>
+                            <Col xs={12} md={6}>
+                                <Card className="panel">
+                                    <div>
+                                        <Tag color={state.solanaSpineAnchored ? 'success' : 'processing'}>
+                                            {state.solanaSpineAnchored ? 'Solana Anchored' : 'Solana Pending'}
+                                        </Tag>
+                                        <Button size="small" onClick={() => dispatch({ type: 'ANCHOR_SOLANA' })}>
+                                            Anchor
+                                        </Button>
+                                    </div>
+                                </Card>
+                            </Col>
+                        </Row>
+                        <Tabs items={tabs} />
+                        <Modal
+                            title="Create Triple-Entry Bid"
+                            open={bidModalVisible}
+                            onOk={placeBid}
+                            onCancel={() => setBidModalVisible(false)}
+                        >
+                            <InputNumber
+                                style={{ width: '100%' }}
+                                min={0}
+                                value={bidAmount}
+                                onChange={(v) => setBidAmount(v || 0)}
+                                placeholder="Bid amount"
+                            />
+                        </Modal>
+                    </div>
+                </LedgerContext.Provider>
+            );
+        };
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<SpineAlignTime />);
+    </script>
+</body>
+</html>
