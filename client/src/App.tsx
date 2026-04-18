@@ -12,6 +12,8 @@ import Tribes from './pages/Tribes'
 import Calendar from './pages/Calendar'
 import CommunityProjects from './pages/CommunityProjects'
 import BaseExplorer from './pages/BaseExplorer'
+import SovereignCircuit from './pages/SovereignCircuit'
+import HumanNetwork from './pages/HumanNetwork'
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
         <Route path="calendar" element={<Calendar />} />
         <Route path="community" element={<CommunityProjects />} />
         <Route path="base" element={<BaseExplorer />} />
+        <Route path="circuit" element={<SovereignCircuit />} />
+        <Route path="human-network" element={<HumanNetwork />} />
       </Route>
     </Routes>
   )

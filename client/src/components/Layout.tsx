@@ -24,6 +24,8 @@ const navItems = [
   { path: '/calendar', label: 'Calendar', icon: '📅' },
   { path: '/community', label: 'Community', icon: '🤝' },
   { path: '/base', label: 'Base', icon: '🔵' },
+  { path: '/circuit', label: 'Circuit', icon: '⚕️' },
+  { path: '/human-network', label: 'Human Net', icon: '🧬' },
   { path: '/spine-align-time', label: 'Temple', icon: '🏛' },
 ]
 
