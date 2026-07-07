@@ -14,6 +14,7 @@
     "@replit/connectors-sdk": "^0.3.0",
     "@solflare-wallet/sdk": "^1.4.2",
     "@types/pg": "^8.16.0",
+    "@vercel/node": "^5.7.0",
     "@vitejs/plugin-react": "^5.1.4",
     "buffer": "^6.0.3",
     "cors": "^2.8.6",
@@ -33,5 +34,8 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "drizzle-kit": "^0.31.9"
+  },
+  "overrides": {
+    "protobufjs": "^7.5.5"
   }
 }
