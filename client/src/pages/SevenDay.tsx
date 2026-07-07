@@ -155,12 +155,7 @@ export default function SevenDay() {
   const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
   const activePillarCount = pillars.filter((p) => p.active).length
 
-  const odinActivity =
-    state.bids.length +
-    state.events.length +
-    state.dawnCount +
-    state.duskCount +
-    state.chainCount
+  const odinActivity = state.bids.length + state.events.length
   const odinState = odinActivity > 10 ? 'active' : 'idle'
 
   const pastDays: PastDay[] = useMemo(() => {
