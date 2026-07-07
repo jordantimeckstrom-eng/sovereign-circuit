@@ -16,9 +16,19 @@ export interface Bid {
   saraiWhisper: SaraiWhisper
 }
 
+export type LedgerEventType = 'reflection' | 'ceremony'
+
+export interface LedgerEvent {
+  id: string
+  type: LedgerEventType
+  text: string
+  timestamp: string
+}
+
 export interface LedgerState {
   bids: Bid[]
   ghosts: string[]
+  events: LedgerEvent[]
   dawnCount: number
   duskCount: number
   chainCount: number
@@ -30,12 +40,22 @@ export interface LedgerState {
 const initialState: LedgerState = {
   bids: [],
   ghosts: [],
+  events: [],
   dawnCount: 0,
   duskCount: 0,
   chainCount: 0,
   grokTemp: 0.7,
   lastSync: new Date().toISOString(),
   signalRConnected: false,
+}
+
+function makeEvent(type: LedgerEventType, text: string): LedgerEvent {
+  return {
+    id: `evt_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+    type,
+    text,
+    timestamp: new Date().toISOString(),
+  }
 }
 
 export type Action =
@@ -53,13 +73,29 @@ function ledgerReducer(state: LedgerState, action: Action): LedgerState {
     case 'INGEST_BID':
       return { ...state, bids: [action.payload, ...state.bids].slice(0, 200) }
     case 'DIGEST_GHOST':
-      return { ...state, ghosts: [action.payload, ...state.ghosts].slice(0, 100) }
+      return {
+        ...state,
+        ghosts: [action.payload, ...state.ghosts].slice(0, 100),
+        events: [makeEvent('reflection', action.payload), ...state.events].slice(0, 500),
+      }
     case 'INCREMENT_DAWN':
-      return { ...state, dawnCount: state.dawnCount + 1 }
+      return {
+        ...state,
+        dawnCount: state.dawnCount + 1,
+        events: [makeEvent('ceremony', 'Dawn ceremony completed'), ...state.events].slice(0, 500),
+      }
     case 'INCREMENT_DUSK':
-      return { ...state, duskCount: state.duskCount + 1 }
+      return {
+        ...state,
+        duskCount: state.duskCount + 1,
+        events: [makeEvent('ceremony', 'Dusk ceremony completed'), ...state.events].slice(0, 500),
+      }
     case 'INCREMENT_CHAIN':
-      return { ...state, chainCount: Math.min(state.chainCount + 1, 1132) }
+      return {
+        ...state,
+        chainCount: Math.min(state.chainCount + 1, 1132),
+        events: [makeEvent('ceremony', 'Alignment committed (+1)'), ...state.events].slice(0, 500),
+      }
     case 'EVOLVE_SYSTEM':
       return { ...state, ...action.payload }
     case 'SET_SIGNALR':
