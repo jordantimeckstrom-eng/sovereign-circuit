@@ -42,15 +42,25 @@ A time governance dApp built on the Sovereign Circuit framework. Combines partic
 - Shield Protocol (GovernUniversal smart contract) — suspended
 - Time auction bidding in crypto (SOL) — replaced with USD bidding for now
 
-## Running
-- Workflow: `npm run dev` (runs Express server with Vite middleware) on port 5000
-- Express serves API routes and Vite dev server in middleware mode
-- Database: PostgreSQL via Drizzle ORM (conversations + messages for AI chat)
+## Deployment
+### Replit
+- Workflow: `npm run dev` (Express + Vite middleware) on port 5000
+- Published via Replit autoscale deployment
+
+### Vercel
+- GitHub repo: `jordantimeckstrom-eng/sovereign-circuit`
+- `api/` directory contains serverless functions mirroring Express routes
+- `api/lib/` shared utilities (rpc.ts, namehash.ts, db.ts, ai.ts, sovereign.ts)
+- `vercel.json` configures build, rewrites, CORS headers, and function timeouts
+- Frontend builds from `client/` to `client/dist/`
+- SpineAlignTime static assets in `client/public/spine-align-time/`
+- Environment variables needed on Vercel: `DATABASE_URL`, `GEMINI_API_KEY`
 
 ## Tech Stack
 - React 18, TypeScript, Vite, React Router v6
-- Express 5, Drizzle ORM, PostgreSQL (Neon)
-- Gemini AI via Replit AI Integrations (no API key needed)
+- Express 5 (Replit dev), Vercel serverless functions (production)
+- Drizzle ORM, PostgreSQL (Neon)
+- Gemini AI via Replit AI Integrations or standard Gemini API key
 - CSS Modules with dark/gold sovereign theme (Crimson Pro + Inter fonts)
 
 ## Design System
@@ -62,7 +72,31 @@ A time governance dApp built on the Sovereign Circuit framework. Combines partic
 ## Dependencies
 - js-sha3: keccak256 for ENS-compatible Basename namehash computation
 
+## Universal Ceremonial Access (LedgerContext)
+- `client/src/context/LedgerContext.tsx` — global state with bids, ghosts, dawn/dusk counts, chain count, signal status. Reducer actions: `INGEST_BID`, `DIGEST_GHOST`, `INCREMENT_DAWN/DUSK/CHAIN`, `EVOLVE_SYSTEM`, `SET_SIGNALR`. Persists to localStorage.
+- `client/src/context/LedgerBridge.ts` — exposes dispatch globally so non-React code (email webhooks, schedulers, external API listeners) can dispatch ceremonies. Browser console: `window.__sovereignLedger.ingestBid({...})`.
+- `client/src/services/ceremonyScheduler.ts` — auto-fires dawn/dusk ceremonies at 6am/6pm, syncs every minute.
+- `LedgerProvider` wraps the app in `client/src/main.tsx`.
+
+## Sovereign Circuit Unified Page (`/circuit`)
+- `client/src/pages/SovereignCircuit.tsx` — single-page interface with 7 tabs: Zenith dashboard, SpineAlign protocols, Phoenix Fortress (1132-step alignment counter), Time Auction, Tribes (6 corner archetypes), The School (Sarai chat via Gemini streaming), Live Ledger (universal ceremonial access feed).
+- All tabs read/write the shared LedgerContext — bids placed in Time Auction appear in Live Ledger; SpineAlign engagements digest as ghosts; Fortress commits increment chainCount.
+
+## Human Network Whitepaper (`/human-network`)
+- `client/src/pages/HumanNetwork.tsx` — summary of Holonym Foundation's threshold network paper. Covers VOPRF, ElGamal decryption on ZK-friendly curves, n/t-quorums, DKG, Feldman VSS, Lagrange interpolation, DLEQ proofs. Positioned as the identity substrate for Sovereign Circuit.
+
+## Real-Time Ledger Platform
+- `server/realtime/gateway.ts` — WebSocket gateway attached to the Express HTTP server at path `/ws/ledger` (via `noServer` upgrade handling so it never collides with Vite HMR). On connect, sends a full history snapshot; relays published actions to all other clients (excludes sender to avoid double-apply); persists every action to Postgres.
+- `server/routes/ledger.ts` — REST parity: `GET /api/ledger/snapshot` (full shared state) and `POST /api/ledger/event` (persist + broadcast; also usable by external webhooks/schedulers).
+- `shared/models/ledger.ts` — `ledger_events` table (eventId unique for idempotent dedup, kind, action, jsonb payload, createdAt) as the shared source of truth.
+- `client/src/services/realtimeClient.ts` — WS client with auto-reconnect and REST-polling fallback. `wrapDispatch` publishes locally-originated syncable actions (`INGEST_BID`, `DIGEST_GHOST`, `INCREMENT_DAWN/DUSK/CHAIN`); remote actions apply via raw dispatch (no re-publish). Counters hydrate from server aggregation (not incremental replay) so they never double-count.
+- LedgerProvider wires wrapped dispatch to consumers + the global bridge, and passes raw dispatch to the realtime client. `signalRConnected` reflects live WS status.
+- Vercel: `api/lib/ledger.ts` + `api/ledger/snapshot.ts` + `api/ledger/event.ts` provide REST persistence in serverless (WebSockets are not supported on Vercel serverless, so production clients use the polling fallback).
+
 ## Recent Changes
+- Jul 2026: Wired the `/rhythm` 7-Day view to real ledger data (bids + timestamped events grouped by real calendar day). Built the real-time ledger platform — WebSocket gateway (`/ws/ledger`) + Postgres persistence (`ledger_events`) + REST snapshot/event endpoints, with client auto-reconnect and polling fallback. Ledger activity (bids, ceremonies, reflections) now syncs live across all connected clients.
+- Apr 2026: Added `/circuit` unified Sovereign Circuit page (Zenith/SpineAlign/Fortress/Auction/Tribes/School/Ledger), LedgerContext + LedgerBridge for universal ceremonial access, ceremony scheduler, `/human-network` whitepaper page summarizing Holonym threshold cryptography
+- Apr 2026: Restructured for Vercel — `api/` directory with serverless functions, `vercel.json` config, GitHub repo `jordantimeckstrom-eng/sovereign-circuit`
 - Mar 2026: Bug fixes — fixed division-by-zero in governance vote bar, corrected stale epoch data (Dawn→completed, Emergence→active, proposals updated), added Initiate Tribe button handler, improved wallet disconnect with sessionStorage flag to prevent auto-reconnect
 - Mar 2026: Added 22-Frame Wheel to SpineAlignTime Temple — 22 sovereign sub-ledgers (Point, Earth x7, Heaven x7, Hell x7) with per-frame bidding, dual-chain anchors (Solana + Ethereum), realm-colored cards, detail modals
 - Mar 2026: Added SpineAlignTime Ouroboros Triple-Entry Temple — merged temple UI + Sentinel listener, served at `/spine-align-time`, accessible from nav

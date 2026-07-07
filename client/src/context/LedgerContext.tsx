@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react'
+import React, { createContext, useContext, useReducer, useEffect, useMemo, ReactNode } from 'react'
 import { setLedgerDispatch } from './LedgerBridge'
+import { initRealtime, wrapDispatch } from '../services/realtimeClient'
 
 export type Channel = 'UI' | 'Email' | 'External' | 'Scheduler' | 'SignalR'
 export type BidStatus = 'Leading' | 'Outbid' | 'Sealed'
@@ -125,9 +126,14 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
     return init
   })
 
+  // Wrapped dispatch publishes locally-originated syncable actions to the
+  // realtime server; remote actions are applied via the raw `dispatch`.
+  const syncedDispatch = useMemo(() => wrapDispatch(dispatch), [dispatch])
+
   useEffect(() => {
-    setLedgerDispatch(dispatch)
-  }, [])
+    setLedgerDispatch(syncedDispatch)
+    initRealtime(dispatch)
+  }, [syncedDispatch])
 
   useEffect(() => {
     try {
@@ -136,7 +142,7 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
   }, [state])
 
   return (
-    <LedgerContext.Provider value={{ state, dispatch }}>
+    <LedgerContext.Provider value={{ state, dispatch: syncedDispatch }}>
       {children}
     </LedgerContext.Provider>
   )
