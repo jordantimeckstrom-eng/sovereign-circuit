@@ -56,6 +56,11 @@ A time governance dApp built on the Sovereign Circuit framework. Combines partic
 - SpineAlignTime static assets in `client/public/spine-align-time/`
 - Environment variables needed on Vercel: `DATABASE_URL`, `GEMINI_API_KEY`
 
+### CI/CD (GitHub Actions)
+- `.github/workflows/ci.yml` — on every push/PR to `main`: `build` job runs the real build (`npm run build` → `tsc -b && vite build`) to catch broken pushes. `deploy` job auto-publishes to Vercel on push to `main`, gated on secrets `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` (safely no-ops if unset).
+- Simpler alternative to the deploy job: connect the repo in the Vercel dashboard for native push-to-deploy (then leave the Vercel secrets unset so the Action only validates the build — avoids double deploys).
+- Replit publishing stays manual (click Publish) — there is no GitHub-triggered Replit autoscale publish.
+
 ## Tech Stack
 - React 18, TypeScript, Vite, React Router v6
 - Express 5 (Replit dev), Vercel serverless functions (production)
