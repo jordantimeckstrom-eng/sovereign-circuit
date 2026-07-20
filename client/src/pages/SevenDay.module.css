@@ -1,0 +1,589 @@
+.stage {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.frame {
+  width: 390px;
+  max-width: 100%;
+  min-height: calc(100vh - 120px);
+  background: #0A0A12;
+  color: #F5F0E1;
+  position: relative;
+  border: 1px solid rgba(201, 168, 76, 0.12);
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  padding-bottom: 96px;
+  font-family: 'Inter', sans-serif;
+}
+
+.scroll {
+  height: 100%;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.noScrollbar::-webkit-scrollbar {
+  display: none;
+}
+.noScrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Header */
+.header {
+  padding: 40px 24px 8px;
+}
+
+.title {
+  font-size: 24px;
+  font-family: 'Crimson Pro', Georgia, serif;
+  color: #F5F0E1;
+  margin-bottom: 4px;
+}
+
+.date {
+  color: rgba(245, 240, 225, 0.4);
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.divider {
+  height: 1px;
+  width: 100%;
+  margin-top: 20px;
+  background: linear-gradient(
+    to right,
+    rgba(201, 168, 76, 0),
+    rgba(201, 168, 76, 0.3),
+    rgba(201, 168, 76, 0)
+  );
+}
+
+/* Sections */
+.section {
+  padding: 16px 24px 32px;
+}
+
+.sectionNoPadX {
+  padding: 0 0 32px;
+}
+
+.sectionHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.pillarsLabel {
+  font-size: 13px;
+  font-family: 'Crimson Pro', Georgia, serif;
+  color: #C9A84C;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.sectionTitle {
+  font-size: 18px;
+  font-family: 'Crimson Pro', Georgia, serif;
+  color: #C9A84C;
+  margin-bottom: 16px;
+}
+
+.sectionTitlePad {
+  padding: 0 24px;
+}
+
+.editBtn {
+  background: none;
+  border: none;
+  color: rgba(245, 240, 225, 0.4);
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+}
+.editBtn:hover {
+  color: #C9A84C;
+}
+
+/* Pillars grid */
+.pillarGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.pillar {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid rgba(201, 168, 76, 0.1);
+  background: #12121A;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s;
+  text-align: left;
+}
+
+.pillarActive {
+  border-color: rgba(201, 168, 76, 0.3);
+  background: rgba(201, 168, 76, 0.05);
+}
+
+.pillarGlow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom right, rgba(201, 168, 76, 0.08), transparent);
+  pointer-events: none;
+}
+
+.pillarIconWrap {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  background: rgba(245, 240, 225, 0.05);
+}
+
+.pillarIconWrapActive {
+  background: rgba(201, 168, 76, 0.15);
+}
+
+.pillarText {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+}
+
+.pillarName {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(245, 240, 225, 0.4);
+  transition: color 0.2s;
+}
+.pillarNameActive {
+  color: #F5F0E1;
+}
+
+.pillarActiveTag {
+  font-size: 9px;
+  color: rgba(201, 168, 76, 0.6);
+  margin-top: 2px;
+}
+
+.pillarRemove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: rgba(245, 240, 225, 0.3);
+}
+.pillarRemove:hover {
+  color: #CF6679;
+}
+
+.addPillar {
+  border-radius: 12px;
+  border: 1px dashed rgba(201, 168, 76, 0.2);
+  background: #12121A;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: rgba(245, 240, 225, 0.3);
+  font-size: 12px;
+  transition: all 0.2s;
+}
+.addPillar:hover {
+  color: rgba(201, 168, 76, 0.6);
+  border-color: rgba(201, 168, 76, 0.4);
+}
+
+.pillarProgressRow {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pillarCount {
+  font-size: 10px;
+  color: rgba(245, 240, 225, 0.4);
+}
+
+/* Progress bar */
+.progressTrack {
+  flex: 1;
+  width: 100%;
+  height: 4px;
+  background: rgba(201, 168, 76, 0.1);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.7s ease-out;
+}
+
+/* Seven Behind - horizontal scroll */
+.pastRow {
+  display: flex;
+  overflow-x: auto;
+  gap: 12px;
+  padding: 0 24px 8px;
+  scroll-snap-type: x mandatory;
+}
+
+.pastCard {
+  scroll-snap-align: center;
+  flex-shrink: 0;
+  border-radius: 12px;
+  border: 1px solid rgba(201, 168, 76, 0.15);
+  background: #12121A;
+  text-align: left;
+  transition: all 0.3s;
+  width: 130px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pastCardExpanded {
+  width: 220px;
+}
+
+.pastCardToday {
+  border-color: rgba(201, 168, 76, 0.5);
+  background: rgba(201, 168, 76, 0.05);
+}
+
+.pastCardHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.pastDay {
+  font-size: 10px;
+  color: rgba(245, 240, 225, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.pastDateRow {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.pastDate {
+  font-size: 20px;
+  font-family: 'Crimson Pro', Georgia, serif;
+  color: #F5F0E1;
+}
+
+.pastMonth {
+  font-size: 10px;
+  color: rgba(245, 240, 225, 0.3);
+}
+
+.todayTag {
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #C9A84C;
+  background: rgba(201, 168, 76, 0.1);
+  padding: 2px 8px;
+  border-radius: 9999px;
+}
+
+.entryDots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.entryDot {
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.entryCount {
+  font-size: 9px;
+  color: rgba(245, 240, 225, 0.3);
+  margin-left: auto;
+}
+
+.entryList {
+  margin-top: 4px;
+  border-top: 1px solid rgba(201, 168, 76, 0.1);
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.entryBadge {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 6px 0;
+}
+
+.entryIcon {
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.entryText {
+  font-size: 10px;
+  color: rgba(245, 240, 225, 0.6);
+  line-height: 1.4;
+}
+
+/* Seven Ahead */
+.futureList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.futureRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(201, 168, 76, 0.1);
+  background: #12121A;
+  padding: 12px;
+  transition: background 0.2s;
+}
+.futureRow:hover {
+  background: rgba(201, 168, 76, 0.05);
+}
+
+.futureDateCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  flex-shrink: 0;
+}
+
+.futureDay {
+  font-size: 9px;
+  color: rgba(245, 240, 225, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.futureDate {
+  font-size: 14px;
+  font-family: 'Crimson Pro', Georgia, serif;
+  color: #F5F0E1;
+}
+
+.futureVDivider {
+  width: 1px;
+  height: 32px;
+  background: rgba(201, 168, 76, 0.1);
+}
+
+.futureBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.futureIntention {
+  font-size: 12px;
+  color: rgba(245, 240, 225, 0.8);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.futureTags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.futureTag {
+  font-size: 8px;
+  color: rgba(201, 168, 76, 0.6);
+  background: rgba(201, 168, 76, 0.08);
+  padding: 2px 6px;
+  border-radius: 9999px;
+}
+
+.priorityDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  flex-shrink: 0;
+}
+.priorityHigh {
+  background: #C9A84C;
+  box-shadow: 0 0 6px rgba(201, 168, 76, 0.4);
+}
+.priorityMedium {
+  background: rgba(201, 168, 76, 0.4);
+}
+.priorityLow {
+  background: rgba(201, 168, 76, 0.15);
+}
+
+.chevron {
+  color: rgba(245, 240, 225, 0.2);
+  flex-shrink: 0;
+}
+
+/* ODIN awareness strip */
+.odin {
+  margin: 0 24px 24px;
+  border-radius: 12px;
+  border: 1px solid rgba(201, 168, 76, 0.15);
+  background: #12121A;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.odinPulse {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  flex-shrink: 0;
+}
+
+.odinActive {
+  background: #4ECDC4;
+  box-shadow: 0 0 8px rgba(78, 205, 196, 0.6);
+  animation: odinBreath 2s ease-in-out infinite;
+}
+
+.odinIdle {
+  background: rgba(201, 168, 76, 0.4);
+}
+
+@keyframes odinBreath {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.odinBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.odinLabel {
+  font-size: 10px;
+  color: rgba(245, 240, 225, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+.odinState {
+  font-size: 13px;
+  font-family: 'Crimson Pro', Georgia, serif;
+  color: #F5F0E1;
+}
+
+.odinCount {
+  font-size: 11px;
+  color: rgba(201, 168, 76, 0.7);
+}
+
+/* Floating bottom action bar */
+.dock {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 80px;
+  background: linear-gradient(to top, #0A0A12, #0A0A12, transparent);
+  pointer-events: none;
+  z-index: 50;
+}
+
+.dockInner {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  pointer-events: auto;
+  background: rgba(18, 18, 26, 0.8);
+  backdrop-filter: blur(12px);
+  padding: 12px 24px;
+  border-radius: 9999px;
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  box-shadow: 0 0 20px rgba(201, 168, 76, 0.1);
+}
+
+.dockBtn {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(245, 240, 225, 0.5);
+  transition: color 0.2s, transform 0.2s;
+}
+.dockBtn:hover {
+  color: #C9A84C;
+}
+.dockBtn:hover svg {
+  transform: scale(1.1);
+}
+
+.dockBtnActive {
+  color: #C9A84C;
+  position: relative;
+}
+
+.dockGlow {
+  position: absolute;
+  inset: 0;
+  background: rgba(201, 168, 76, 0.2);
+  filter: blur(12px);
+  border-radius: 9999px;
+}
+
+.dockDivider {
+  width: 1px;
+  height: 24px;
+  background: rgba(201, 168, 76, 0.2);
+}
+
+.dockBtn svg {
+  transition: transform 0.2s;
+  position: relative;
+  z-index: 10;
+}

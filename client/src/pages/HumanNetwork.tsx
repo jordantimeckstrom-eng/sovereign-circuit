@@ -1,4 +1,5 @@
 import styles from './Whitepaper.module.css'
+import SovereignVaultPanel from '../components/SovereignVaultPanel'
 
 export default function HumanNetwork() {
   return (
@@ -13,7 +14,17 @@ export default function HumanNetwork() {
         </p>
       </header>
 
-      <section className={styles.section}>
+      <section className={`${styles.section} ${styles.sectionVisible}`}>
+        <h2 className={styles.sectionTitle}>0 · Sovereign Crypto Layer — Live</h2>
+        <p className={styles.paragraph}>
+          Working implementation of the concepts below: encrypted ledger storage, VOPRF
+          nullifiers, epoch DKG across the six tribes, and the threshold compliance vault.
+          Network calls are simulated locally; the API shapes match the real protocol.
+        </p>
+        <SovereignVaultPanel />
+      </section>
+
+      <section className={`${styles.section} ${styles.sectionVisible}`}>
         <h2 className={styles.sectionTitle}>1 · Why Personhood Matters Here</h2>
         <p className={styles.paragraph}>
           Personhood is critical infrastructure. To access social benefits, travel, or transact, you
@@ -24,7 +35,7 @@ export default function HumanNetwork() {
         </p>
       </section>
 
-      <section className={styles.section}>
+      <section className={`${styles.section} ${styles.sectionVisible}`}>
         <h2 className={styles.sectionTitle}>2 · What Human Network Is</h2>
         <p className={styles.paragraph}>
           Human Network is a threshold network for scalar-by-elliptic-curve-point multiplication,
@@ -47,7 +58,7 @@ export default function HumanNetwork() {
         </ul>
       </section>
 
-      <section className={styles.section}>
+      <section className={`${styles.section} ${styles.sectionVisible}`}>
         <h2 className={styles.sectionTitle}>3 · The Threshold Primitive</h2>
         <p className={styles.paragraph}>
           The pseudorandom function over client input <code>x</code> and distributed secret{' '}
@@ -62,7 +73,7 @@ export default function HumanNetwork() {
         </p>
       </section>
 
-      <section className={styles.section}>
+      <section className={`${styles.section} ${styles.sectionVisible}`}>
         <h2 className={styles.sectionTitle}>4 · Network & Security Model</h2>
         <ul className={styles.list}>
           <li>
@@ -83,7 +94,7 @@ export default function HumanNetwork() {
         </ul>
       </section>
 
-      <section className={styles.section}>
+      <section className={`${styles.section} ${styles.sectionVisible}`}>
         <h2 className={styles.sectionTitle}>5 · Building Blocks</h2>
         <ul className={styles.list}>
           <li>
@@ -110,7 +121,7 @@ export default function HumanNetwork() {
         </ul>
       </section>
 
-      <section className={styles.section}>
+      <section className={`${styles.section} ${styles.sectionVisible}`}>
         <h2 className={styles.sectionTitle}>6 · Why It Lives in the Circuit</h2>
         <p className={styles.paragraph}>
           Sovereign Circuit's identity bond (<code>jordaneckstrom.base.eth</code>) is a public

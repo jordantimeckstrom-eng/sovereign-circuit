@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useReducer, useEffect, useMemo, ReactNode } from 'react'
+import React, { createContext, useContext, useReducer, useEffect, useMemo, useRef, ReactNode } from 'react'
 import { setLedgerDispatch } from './LedgerBridge'
 import { initRealtime, wrapDispatch } from '../services/realtimeClient'
+import { restoreLedgerState, persistLedgerState } from '../lib/ledgerCipher'
 
 export type Channel = 'UI' | 'Email' | 'External' | 'Scheduler' | 'SignalR'
 export type BidStatus = 'Leading' | 'Outbid' | 'Sealed'
@@ -115,16 +116,10 @@ interface LedgerContextValue {
 
 const LedgerContext = createContext<LedgerContextValue | null>(null)
 
-const STORAGE_KEY = 'sovereign_ledger_v1'
-
 export function LedgerProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(ledgerReducer, initialState, (init) => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY)
-      if (raw) return { ...init, ...JSON.parse(raw) }
-    } catch {}
-    return init
-  })
+  const [state, dispatch] = useReducer(ledgerReducer, initialState)
+  const readyRef = useRef(false)
+  const persistSeqRef = useRef(0)
 
   // Wrapped dispatch publishes locally-originated syncable actions to the
   // realtime server; remote actions are applied via the raw `dispatch`.
@@ -135,10 +130,41 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
     initRealtime(dispatch)
   }, [syncedDispatch])
 
+  // Restore persisted state (AES-GCM encrypted; migrates legacy plaintext).
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
-    } catch {}
+    let cancelled = false
+    ;(async () => {
+      try {
+        const { state: saved, fromLegacy } = await restoreLedgerState<Partial<LedgerState>>()
+        if (!cancelled && saved) {
+          dispatch({ type: 'HYDRATE', payload: saved })
+          // Complete plaintext -> encrypted migration immediately, even if
+          // the user never mutates state this session.
+          if (fromLegacy) persistLedgerState(saved).catch(() => {})
+        }
+      } catch (e) {
+        console.warn('[ledger] restore failed', e)
+      } finally {
+        if (!cancelled) readyRef.current = true
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  // Persist encrypted; sequence guard ensures only the latest write lands.
+  useEffect(() => {
+    if (!readyRef.current) return
+    const seq = ++persistSeqRef.current
+    ;(async () => {
+      try {
+        // Commit is checked after encryption, so a stale write never lands.
+        await persistLedgerState(state, () => seq === persistSeqRef.current)
+      } catch (e) {
+        console.warn('[ledger] encrypted persist failed', e)
+      }
+    })()
   }, [state])
 
   return (

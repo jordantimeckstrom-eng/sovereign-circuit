@@ -13,6 +13,7 @@ const BASE_CHAIN_CONFIG = {
 
 const navItems = [
   { path: '/', label: 'Dashboard', icon: '◈' },
+  { path: '/rhythm', label: '7-Day', icon: '🌅' },
   { path: '/governance', label: 'Governance', icon: '⏳' },
   { path: '/tribes', label: 'Tribes', icon: '⚔' },
   { path: '/curriculum', label: 'Curriculum', icon: '📜' },
@@ -26,6 +27,7 @@ const navItems = [
   { path: '/base', label: 'Base', icon: '🔵' },
   { path: '/circuit', label: 'Circuit', icon: '⚕️' },
   { path: '/human-network', label: 'Human Net', icon: '🧬' },
+  { path: '/wheel', label: 'Wheel', icon: '☸️' },
   { path: '/spine-align-time', label: 'Temple', icon: '🏛' },
 ]
 
